@@ -1,4 +1,5 @@
-song = "";
+zigzag = "";
+h.a.y = "";
 
 function setup() {
     canvas = createCanvas(640,480);
@@ -13,7 +14,7 @@ function draw() {
 }
 
 function preload() {
-    song = loadSound("ZigZag.mp3","H.A.Y.mp3");
+    song = loadSound("zigzag.mp3","h.a.y.mp3");
 }
 
 function play() {
