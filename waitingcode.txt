@@ -1,0 +1,4 @@
+function play() {
+    zigzag.play();
+    hay.play();
+}
