@@ -1,91 +1,99 @@
 zigzag = "";
 hay = "";
-leftWristX = 0;
-leftWristY = 0;
+
+zigzag_status = "";
+hay_status = "";
+
+scoreRightWrist = 0;
+scoreLeftWrist = 0;
+
 rightWristX = 0;
 rightWristY = 0;
-loadSound = "";
-scoreLeftWrist = 0;
-scoreRightWrist = 0;
 
-function setup() {
-    canvas = createCanvas(640,480);
-    canvas.center();
+leftWristX = 0;
+leftWristY = 0;
 
-    video = createCapture(VIDEO);
-    video.hide();
-
-    poseNet = ml5.poseNet(video,modelLoaded);
-    poseNet.on('pose',gotPoses);
+function preload()
+{
+	zigzag = loadSound("zigzag.mp3");
+	hay = loadSound("hay.mp3");
 }
 
-function preload() {
-    zigzag = loadSound("zigzag.mp3");
-    hay = loadSound("h.a.y.mp3");
+function setup() {
+	canvas =  createCanvas(640, 480);
+	canvas.center();
+
+	video = createCapture(VIDEO);
+	video.hide();
+
+	poseNet = ml5.poseNet(video, modelLoaded);
+	poseNet.on('pose', gotPoses);
 }
 
 function modelLoaded() {
-    console.log("Posenet is Initialized!");
+  console.log('PoseNet Is Initialized');
 }
 
-function gotPoses(leftWristresults, rightWristresults,error) {
-    if (leftWristresults.length > 0) {
-        console.log(leftWristresults);
-        scoreLeftWrist = results[0].pose.keypoints[9].score;
-        console.log("scoreLeftWrist = " + scoreLeftWrist);
-        leftWristX = results[0].pose.leftWrist.x;
-        leftWristY = results[0].pose.leftWrist.y;
-        console.log("leftWristX = " + leftWristX + "leftWristY = " + leftWristY);
-    }
+function gotPoses(results)
+{
+  if(results.length > 0)
+  {
+	console.log(results);
+	scoreRightWrist =  results[0].pose.keypoints[10].score;
+	scoreLeftWrist =  results[0].pose.keypoints[9].score;
+	console.log("scoreRightWrist = " + scoreRightWrist + "scoreLeftWrist = " + scoreLeftWrist);
+	
+	rightWristX = results[0].pose.rightWrist.x;
+	rightWristY = results[0].pose.rightWrist.y;
+	console.log("rightWristX = " + rightWristX +" rightWristY = "+ rightWristY);
 
-    if (rightWristresults.length > 0) {
-        console.log(rightWristresults);
-        scoreRightWrist = results[0].pose.keypoints[9].score;
-        console.log("scoreRightWrist = " + scoreRightWrist);
-        rightWristX = results[0].pose.rightWrist.x;
-        rightWristY = results[0].pose.rightWrist.y;
-        console.log("rightWristX = " + rightWristX + "rightWristY = " + rightWristY);
-    }
-
-    if (error) {
-        console.error();
-    }
-}
-
-function play() {
-    zigzag.play();
-    zigzag.setVolume(1);
-    zigzag.rate(1);
-    hay.play();
-    hay.setVolume(1);
-    hay.rate(1);
+	leftWristX = results[0].pose.leftWrist.x;
+	leftWristY = results[0].pose.leftWrist.y;
+	console.log("leftWristX = " + leftWristX +" leftWristY = "+ leftWristY);
+		
+  }
 }
 
 function draw() {
-    image(video, 0, 0, 640, 480);
-    fill('#FF0000');
-    stroke('#FF0000');
+	image(video, 0, 0, 640, 480);
+	
+	zigzag_status = zigzag.isPlaying();
+	hay_status = hay.isPlaying();
 
-    zigzag.isPlaying();
-    hay.isPlaying();
+	fill("#FF0000");
+	stroke("#FF0000");
 
-    if (scoreLeftWrist > 0.2) {
-        circle(leftWristX,leftWristY,20);
-        hay.stop();
-    }
+	if(scoreRightWrist > 0.2)
+	{ 
+		circle(rightWristX,rightWristY,20);
 
-    if (zigzag.isPlaying() = false) {
-        zigzag.play();
-        document.getElementById("song_name").innerHTML = "ZigZag"
-    }
+			zigzag.stop();
 
-    if (scoreRightWrist > 0.2) {
-        circle(RightWristX,RightWristY,20);
-        zigzag.stop();
-    }
-    
-    if (hay.isPlaying() = false) {
-        hay.play();
-        document.getElementById("song_name").innerHTML = "H.A.Y"
-    }
+		if(hay_status == false)
+		{
+			hay.play();
+			document.getElementById("song").innerHTML = "Playing - 🎵H.A.Y🎵"
+		}
+	}
+
+	if(scoreLeftWrist > 0.2)
+	{
+		circle(leftWristX,leftWristY,20);
+
+			hay.stop();
+
+		if(zigzag_status == false)
+		{
+			zigzag.play();
+			document.getElementById("song").innerHTML = "Playing - 🎵ZigZag🎵"
+		}
+	}
+
+}
+
+function play()
+{
+	song.play();
+	song.setVolume(1);
+	song.rate(1);
 }
