@@ -13,6 +13,8 @@ rightWristY = 0;
 leftWristX = 0;
 leftWristY = 0;
 
+loadSound = "";
+
 function preload()
 {
 	zigzag = loadSound("zigzag.mp3");
